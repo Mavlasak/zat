@@ -65,7 +65,7 @@ Spusťte vestavěný webový server Symfony uvnitř PHP kontejneru. Parametr `--
 docker compose exec php symfony server:start --allow-all-ip
 ```
 
-Aplikace by nyní měla být dostupná na adrese **http://localhost:8000**.
+Aplikace by nyní měla být dostupná na adrese **http://localhost:8000/en/mediaitem** (pro angličtinu) nebo **http://localhost:8000/cs/mediaitem** (pro češtinu).
 
 ---
 

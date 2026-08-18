@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nová položka{% endblock %}
+{% block title %}{{ 'Create New Item'|trans }}{% endblock %}
 
 {% block body %}
-    <h1>Vytvořit novou položku</h1>
+    <h1>{{ 'Create New Item'|trans }}</h1>
 
     {{ form_start(form, {'attr': {'id': 'media_item_new_form'}}) }} {# Add an ID to the form #}
     {{ form_row(form.title) }}
@@ -34,8 +34,8 @@
 
     <div class="d-flex gap-2 mt-3">
         {# Submit button for the main form, using the 'form' attribute to link it to the form #}
-        <button type="submit" form="media_item_new_form" class="btn btn-primary">{{ button_label|default('Uložit') }}</button>
-        <a href="{{ path('app_media_item_index') }}" class="btn btn-secondary">Zpět na seznam</a>
+        <button type="submit" form="media_item_new_form" class="btn btn-primary">{{ button_label|default('Save')|trans }}</button>
+        <a href="{{ path('app_media_item_index', {'_locale': app.request.locale}) }}" class="btn btn-secondary">{{ 'Back to list'|trans }}</a>
     </div>
 
     <script>

@@ -11,8 +11,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Service\MediaItemService;
+use Symfony\Contracts\Translation\TranslatorInterface; // Import TranslatorInterface
 
-#[Route('/mediaitem')]
+#[Route('/{_locale}/mediaitem', requirements: ['_locale' => 'en|cs'])] // Add locale to the base route
 class MediaItemController extends AbstractController
 {
 
@@ -28,9 +29,8 @@ class MediaItemController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $mediaItemService->createMediaItemFromDto($dto);
-
-            return $this->redirectToRoute('app_media_item_index');
+            // Pass the current locale to redirectToRoute
+            return $this->redirectToRoute('app_media_item_index', ['_locale' => $request->getLocale()]);
         }
 
         return $this->render('media_item/new.html.twig', [
@@ -63,7 +63,8 @@ class MediaItemController extends AbstractController
     public function edit(
         Request $request,
         MediaItem $mediaItem,
-        MediaItemService $mediaItemService
+        MediaItemService $mediaItemService,
+        TranslatorInterface $translator // Inject TranslatorInterface
     ): Response {
         $dto = MediaItemDTO::fromEntity($mediaItem);
         $form = $this->createForm(MediaItemType::class, $dto, [
@@ -74,9 +75,10 @@ class MediaItemController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $mediaItemService->updateMediaItemFromDto($mediaItem, $dto);
-            $this->addFlash('success', 'Položka byla úspěšně upravena.');
+            $this->addFlash('success', $translator->trans('Item was successfully updated.')); // Translate the flash message
 
-            return $this->redirectToRoute('app_media_item_index', [], Response::HTTP_SEE_OTHER);
+            // Pass the current locale to redirectToRoute
+            return $this->redirectToRoute('app_media_item_index', ['_locale' => $request->getLocale()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('media_item/edit.html.twig', [
@@ -92,6 +94,7 @@ class MediaItemController extends AbstractController
             $mediaItemService->removeMediaItem($mediaItem);
         }
 
-        return $this->redirectToRoute('app_media_item_index', [], Response::HTTP_SEE_OTHER);
+        // Pass the current locale to redirectToRoute
+        return $this->redirectToRoute('app_media_item_index', ['_locale' => $request->getLocale()], Response::HTTP_SEE_OTHER);
     }
 }
