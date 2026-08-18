@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    <table class="table">
+    <table class="table table-striped table-hover">
         <thead>
         <tr>
             <th>Typ</th>
@@ -53,8 +53,10 @@
                 <td>{{ media_item.acquisitionDate ? media_item.acquisitionDate|date('Y-m-d') : '' }}</td>
                 <td>{{ media_item.borrowedTo }}</td>
                 <td>
-                    <a href="{{ path('app_media_item_show', {'id': media_item.id}) }}">zobrazit</a>
-                    <a href="{{ path('app_media_item_edit', {'id': media_item.id}) }}">upravit</a>
+                    <div class="d-flex gap-2">
+                        <a href="{{ path('app_media_item_show', {'id': media_item.id}) }}" class="btn btn-sm btn-info">Zobrazit</a>
+                        <a href="{{ path('app_media_item_edit', {'id': media_item.id}) }}" class="btn btn-sm btn-warning">Upravit</a>
+                    </div>
                 </td>
             </tr>
         {% else %}
