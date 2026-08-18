@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nová položka{% endblock %}
+
+{% block body %}
+    <h1>Vytvořit novou položku</h1>
+
+    {{ form_start(form) }}
+    {{ form_row(form.title) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.acquisitionDate) }}
+    {{ form_row(form.borrowedTo) }}
+
+    {# Zde byla změna: item_type_selector -> type #}
+    {{ form_row(form.type) }}
+
+    {# Kontejnery pro dynamicky přidávaná pole #}
+    <div id="book_fields" style="display: none;">
+        {% if form.author is defined %}
+            {{ form_row(form.author) }}
+        {% endif %}
+    </div>
+    <div id="cd_fields" style="display: none;">
+        {% if form.artist is defined %}
+            {{ form_row(form.artist) }}
+        {% endif %}
+    </div>
+    <div id="dvd_fields" style="display: none;">
+        {% if form.director is defined %}
+            {{ form_row(form.director) }}
+        {% endif %}
+    </div>
+
+    <button class="btn btn-primary mt-3">{{ button_label|default('Uložit') }}</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_media_item_index') }}" class="btn btn-link mt-2">Zpět na seznam</a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Zde byla druhá změna: item_type_selector -> type
+            const itemTypeSelector = document.getElementById('{{ form.type.vars.id }}');
+            const bookFields = document.getElementById('book_fields');
+            const cdFields = document.getElementById('cd_fields');
+            const dvdFields = document.getElementById('dvd_fields');
+
+            function toggleSpecificFields() {
+                if (!itemTypeSelector) return; // Ochrana, pokud políčko na stránce chybí
+
+                const selectedType = itemTypeSelector.value;
+
+                bookFields.style.display = 'none';
+                cdFields.style.display = 'none';
+                dvdFields.style.display = 'none';
+
+                if (selectedType === 'book') {
+                    bookFields.style.display = 'block';
+                } else if (selectedType === 'cd') {
+                    cdFields.style.display = 'block';
+                } else if (selectedType === 'dvd') {
+                    dvdFields.style.display = 'block';
+                }
+            }
+
+            // Spustit při načtení stránky (pro případ editace, kdy je již typ vybrán)
+            toggleSpecificFields();
+
+            // Spustit při změně výběru
+            if (itemTypeSelector) {
+                itemTypeSelector.addEventListener('change', toggleSpecificFields);
+            }
+        });
+    </script>
+{% endblock %}

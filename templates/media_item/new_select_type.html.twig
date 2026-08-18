@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Zvolte typ{% endblock %}
+
+{% block body %}
+    <h1>Co chcete vytvořit?</h1>
+
+    <div class="list-group">
+        <a href="{{ path('app_media_item_new', {'type': 'book'}) }}" class="list-group-item list-group-item-action">
+            Kniha
+        </a>
+        <a href="{{ path('app_media_item_new', {'type': 'cd'}) }}" class="list-group-item list-group-item-action">
+            CD
+        </a>
+        <a href="{{ path('app_media_item_new', {'type': 'dvd'}) }}" class="list-group-item list-group-item-action">
+            DVD
+        </a>
+    </div>
+
+    <a href="{{ path('app_media_item_index') }}" class="btn btn-link mt-3">Zpět na seznam</a>
+{% endblock %}

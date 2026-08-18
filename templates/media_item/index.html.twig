@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Evidence médií{% endblock %}
+
+{% block body %}
+    <h1>Evidence médií</h1>
+
+    <div class="d-flex justify-content-between mb-3">
+        <div class="btn-group">
+            <a href="{{ path('app_media_item_index') }}" class="btn btn-{{ current_type is null ? 'primary' : 'secondary' }}">Vše</a>
+            <a href="{{ path('app_media_item_index', {'type': 'book'}) }}" class="btn btn-{{ current_type == 'book' ? 'primary' : 'secondary' }}">Knihy</a>
+            <a href="{{ path('app_media_item_index', {'type': 'cd'}) }}" class="btn btn-{{ current_type == 'cd' ? 'primary' : 'secondary' }}">CD</a>
+            <a href="{{ path('app_media_item_index', {'type': 'dvd'}) }}" class="btn btn-{{ current_type == 'dvd' ? 'primary' : 'secondary' }}">DVD</a>
+        </div>
+
+        <div>
+            <a href="{{ path('app_media_item_new') }}" class="btn btn-success">Vytvořit novou položku</a>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Typ</th>
+            <th>Název</th>
+            <th>Popis</th>
+            <th>Datum pořízení</th>
+            <th>Zapůjčeno</th>
+            <th>Akce</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for media_item in media_items %}
+            <tr>
+                {# Volá se metoda getTypeName() z vaší entity MediaItem #}
+                <td>{{ media_item.typeName }}</td>
+
+                {# Všechna data se tahají přímo z entity, žádné .entity mezikroky #}
+                <td>{{ media_item.title }}</td>
+                <td>{{ media_item.description }}</td>
+                <td>{{ media_item.acquisitionDate ? media_item.acquisitionDate|date('Y-m-d') : '' }}</td>
+                <td>{{ media_item.borrowedTo }}</td>
+                <td>
+                    <a href="{{ path('app_media_item_show', {'id': media_item.id}) }}">zobrazit</a>
+                    <a href="{{ path('app_media_item_edit', {'id': media_item.id}) }}">upravit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">Nenalezeny žádné záznamy.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
