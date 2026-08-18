@@ -5,7 +5,7 @@
 {% block body %}
     <h1>Vytvořit novou položku</h1>
 
-    {{ form_start(form) }}
+    {{ form_start(form, {'attr': {'id': 'media_item_new_form'}}) }} {# Add an ID to the form #}
     {{ form_row(form.title) }}
     {{ form_row(form.description) }}
     {{ form_row(form.acquisitionDate) }}
@@ -30,11 +30,13 @@
             {{ form_row(form.director) }}
         {% endif %}
     </div>
-
-    <button class="btn btn-primary mt-3">{{ button_label|default('Uložit') }}</button>
     {{ form_end(form) }}
 
-    <a href="{{ path('app_media_item_index') }}" class="btn btn-link mt-2">Zpět na seznam</a>
+    <div class="d-flex gap-2 mt-3">
+        {# Submit button for the main form, using the 'form' attribute to link it to the form #}
+        <button type="submit" form="media_item_new_form" class="btn btn-primary">{{ button_label|default('Uložit') }}</button>
+        <a href="{{ path('app_media_item_index') }}" class="btn btn-secondary">Zpět na seznam</a>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
