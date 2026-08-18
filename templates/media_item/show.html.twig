@@ -7,26 +7,47 @@
 
     <table class="table table-bordered table-striped">
         <tbody>
+        <tr>
+            <th>{{ 'Id'|trans }}</th>
+            <td>{{ media_item.id }}</td>
+        </tr>
+        <tr>
+            <th>{{ 'Title'|trans }}</th>
+            <td>{{ media_item.title }}</td>
+        </tr>
+        <tr>
+            <th>{{ 'Type'|trans }}</th>
+            <td>{{ media_item.getTypeName()|trans }}</td> {# Zobrazení typu média #}
+        </tr>
+        {# Dynamické zobrazení specifických polí #}
+        {% if media_item.getTypeName() == 'Book' %}
             <tr>
-                <th>{{ 'Id'|trans }}</th>
-                <td>{{ media_item.id }}</td>
+                <th>{{ 'Author'|trans }}</th>
+                <td>{{ media_item.author }}</td>
             </tr>
+        {% elseif media_item.getTypeName() == 'Cd' %}
             <tr>
-                <th>{{ 'Title'|trans }}</th>
-                <td>{{ media_item.title }}</td>
+                <th>{{ 'Artist'|trans }}</th>
+                <td>{{ media_item.artist }}</td>
             </tr>
+        {% elseif media_item.getTypeName() == 'Dvd' %}
             <tr>
-                <th>{{ 'Description'|trans }}</th>
-                <td>{{ media_item.description }}</td>
+                <th>{{ 'Director'|trans }}</th>
+                <td>{{ media_item.director }}</td>
             </tr>
-            <tr>
-                <th>{{ 'Acquisition Date'|trans }}</th>
-                <td>{{ media_item.acquisitionDate ? media_item.acquisitionDate|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>{{ 'Borrowed To'|trans }}</th>
-                <td>{{ media_item.borrowedTo }}</td>
-            </tr>
+        {% endif %}
+        <tr>
+            <th>{{ 'Description'|trans }}</th>
+            <td>{{ media_item.description }}</td>
+        </tr>
+        <tr>
+            <th>{{ 'Acquisition Date'|trans }}</th>
+            <td>{{ media_item.acquisitionDate ? media_item.acquisitionDate|date('Y-m-d') : '' }}</td>
+        </tr>
+        <tr>
+            <th>{{ 'Borrowed To'|trans }}</th>
+            <td>{{ media_item.borrowedTo }}</td>
+        </tr>
         </tbody>
     </table>
 
