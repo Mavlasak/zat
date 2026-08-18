@@ -6,13 +6,11 @@ use App\DTO\MediaItemDTO;
 use App\Entity\MediaItem;
 use App\Form\MediaItemType;
 use App\Repository\MediaItemRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Factory\MediaItemFactory;
-use App\Service\MediaItemService; // Keep this, remove MediaItemManager
+use App\Service\MediaItemService;
 
 #[Route('/mediaitem')]
 class MediaItemController extends AbstractController
@@ -41,13 +39,15 @@ class MediaItemController extends AbstractController
     }
 
     #[Route('/{type?}', name: 'app_media_item_index', requirements: ['type' => 'book|cd|dvd'], methods: ['GET'])]
-    public function index(MediaItemRepository $mediaItemRepository, string $type = null): Response
+    public function index(MediaItemRepository $mediaItemRepository, Request $request, ?string $type = null): Response
     {
-        $mediaItems = $mediaItemRepository->findAllByType($type);
+        $isBorrowed = $request->query->getBoolean('isBorrowed', false);
+        $mediaItems = $mediaItemRepository->findFilteredItems($type, $isBorrowed);
 
         return $this->render('media_item/index.html.twig', [
             'media_items' => $mediaItems,
             'current_type' => $type,
+            'is_borrowed_view' => $isBorrowed,
         ]);
     }
 
@@ -86,10 +86,10 @@ class MediaItemController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_media_item_delete', methods: ['POST'])]
-    public function delete(Request $request, MediaItem $mediaItem, MediaItemService $mediaItemService): Response // Changed dependency
+    public function delete(Request $request, MediaItem $mediaItem, MediaItemService $mediaItemService): Response
     {
         if ($this->isCsrfTokenValid('delete'.$mediaItem->getId(), $request->getPayload()->getString('_token'))) {
-            $mediaItemService->removeMediaItem($mediaItem); // Call the service method
+            $mediaItemService->removeMediaItem($mediaItem);
         }
 
         return $this->redirectToRoute('app_media_item_index', [], Response::HTTP_SEE_OTHER);

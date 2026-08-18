@@ -5,12 +5,24 @@
 {% block body %}
     <h1>Evidence médií</h1>
 
-    <div class="d-flex justify-content-between mb-3">
-        <div class="btn-group">
-            <a href="{{ path('app_media_item_index') }}" class="btn btn-{{ current_type is null ? 'primary' : 'secondary' }}">Vše</a>
-            <a href="{{ path('app_media_item_index', {'type': 'book'}) }}" class="btn btn-{{ current_type == 'book' ? 'primary' : 'secondary' }}">Knihy</a>
-            <a href="{{ path('app_media_item_index', {'type': 'cd'}) }}" class="btn btn-{{ current_type == 'cd' ? 'primary' : 'secondary' }}">CD</a>
-            <a href="{{ path('app_media_item_index', {'type': 'dvd'}) }}" class="btn btn-{{ current_type == 'dvd' ? 'primary' : 'secondary' }}">DVD</a>
+    <div class="d-flex justify-content-between mb-3 align-items-center">
+        <div class="d-flex align-items-center">
+            <div class="form-check me-3">
+                <input class="form-check-input" type="checkbox" id="isBorrowedCheckbox" {% if is_borrowed_view %}checked{% endif %}>
+                <label class="form-check-label" for="isBorrowedCheckbox">
+                    Jen zapůjčené
+                </label>
+            </div>
+
+            <div class="btn-group">
+                {# Always include the current isBorrowed state in type filter links #}
+                {% set borrowed_param = is_borrowed_view ? '1' : '0' %}
+
+                <a href="{{ path('app_media_item_index', {'isBorrowed': borrowed_param}) }}" class="btn btn-{{ current_type is null ? 'primary' : 'secondary' }}">Vše</a>
+                <a href="{{ path('app_media_item_index', {'type': 'book', 'isBorrowed': borrowed_param}) }}" class="btn btn-{{ current_type == 'book' ? 'primary' : 'secondary' }}">Knihy</a>
+                <a href="{{ path('app_media_item_index', {'type': 'cd', 'isBorrowed': borrowed_param}) }}" class="btn btn-{{ current_type == 'cd' ? 'primary' : 'secondary' }}">CD</a>
+                <a href="{{ path('app_media_item_index', {'type': 'dvd', 'isBorrowed': borrowed_param}) }}" class="btn btn-{{ current_type == 'dvd' ? 'primary' : 'secondary' }}">DVD</a>
+            </div>
         </div>
 
         <div>
@@ -52,4 +64,32 @@
         {% endfor %}
         </tbody>
     </table>
+
+    {% block javascripts %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const isBorrowedCheckbox = document.getElementById('isBorrowedCheckbox');
+
+                if (isBorrowedCheckbox) {
+                    isBorrowedCheckbox.addEventListener('change', function() {
+                        const currentUrl = new URL(window.location.href);
+                        if (this.checked) {
+                            currentUrl.searchParams.set('isBorrowed', '1');
+                        } else {
+                            currentUrl.searchParams.delete('isBorrowed');
+                        }
+
+                        const currentType = currentUrl.searchParams.get('type');
+                        if (currentType) {
+                            currentUrl.searchParams.set('type', currentType);
+                        } else {
+                            currentUrl.searchParams.delete('type');
+                        }
+
+                        window.location.href = currentUrl.toString();
+                    });
+                }
+            });
+        </script>
+    {% endblock %}
 {% endblock %}

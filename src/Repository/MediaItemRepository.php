@@ -3,16 +3,14 @@
 namespace App\Repository;
 
 use App\Entity\MediaItem;
+use App\Entity\Book;
+use App\Entity\Cd;
+use App\Entity\Dvd;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<MediaItem>
- *
- * @method MediaItem|null find($id, $lockMode = null, $lockVersion = null)
- * @method MediaItem|null findOneBy(array $criteria, array $orderBy = null)
- * @method MediaItem[]    findAll()
- * @method MediaItem[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class MediaItemRepository extends ServiceEntityRepository
 {
@@ -21,24 +19,29 @@ class MediaItemRepository extends ServiceEntityRepository
         parent::__construct($registry, MediaItem::class);
     }
 
-    public function findAllByType(?string $type): array
+    /**
+     * @return MediaItem[]
+     */
+    public function findFilteredItems(?string $type = null, bool $isBorrowed = false): array
     {
-        if (!$type) {
-            return $this->findAll();
+        $entityClass = match ($type) {
+            'book' => Book::class,
+            'cd'   => Cd::class,
+            'dvd'  => Dvd::class,
+            default => null,
+        };
+
+        $repository = $entityClass
+            ? $this->getEntityManager()->getRepository($entityClass)
+            : $this;
+
+        $qb = $repository->createQueryBuilder('m')
+            ->orderBy('m.title', 'ASC');
+
+        if ($isBorrowed) {
+            $qb->andWhere('m.borrowedTo IS NOT NULL AND m.borrowedTo != :emptyString')
+                ->setParameter('emptyString', '');
         }
-
-        $classMap = [
-            'book' => \App\Entity\Book::class,
-            'cd'   => \App\Entity\Cd::class,
-            'dvd'  => \App\Entity\Dvd::class,
-        ];
-
-        // Pokud by někdo podvrhl URL, vrátíme raději vše (nebo prázdné pole [])
-        if (!isset($classMap[$type])) {
-            return $this->findAll();
-        }
-
-        // Využijeme EntityManager, aby nám automaticky sáhl do správného repozitáře (Book/Cd/Dvd)
-        return $this->getEntityManager()->getRepository($classMap[$type])->findAll();
+        return $qb->getQuery()->getResult();
     }
 }
