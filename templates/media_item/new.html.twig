@@ -5,7 +5,7 @@
 {% block body %}
     <h1>{{ 'Create New Item'|trans }}</h1>
 
-    {{ form_start(form, {'attr': {'id': 'media_item_new_form'}}) }} {# Add an ID to the form #}
+    {{ form_start(form, {'attr': {'id': 'media_item_new_form', 'data-item-type-selector-id': form.type.vars.id}}) }} {# Add an ID and data attribute to the form #}
     {{ form_row(form.title) }}
     {{ form_row(form.description) }}
     {{ form_row(form.acquisitionDate) }}
@@ -38,39 +38,5 @@
         <a href="{{ path('app_media_item_index', {'_locale': app.request.locale}) }}" class="btn btn-secondary">{{ 'Back to list'|trans }}</a>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Zde byla druhá změna: item_type_selector -> type
-            const itemTypeSelector = document.getElementById('{{ form.type.vars.id }}');
-            const bookFields = document.getElementById('book_fields');
-            const cdFields = document.getElementById('cd_fields');
-            const dvdFields = document.getElementById('dvd_fields');
-
-            function toggleSpecificFields() {
-                if (!itemTypeSelector) return; // Ochrana, pokud políčko na stránce chybí
-
-                const selectedType = itemTypeSelector.value;
-
-                bookFields.style.display = 'none';
-                cdFields.style.display = 'none';
-                dvdFields.style.display = 'none';
-
-                if (selectedType === 'book') {
-                    bookFields.style.display = 'block';
-                } else if (selectedType === 'cd') {
-                    cdFields.style.display = 'block';
-                } else if (selectedType === 'dvd') {
-                    dvdFields.style.display = 'block';
-                }
-            }
-
-            // Spustit při načtení stránky (pro případ editace, kdy je již typ vybrán)
-            toggleSpecificFields();
-
-            // Spustit při změně výběru
-            if (itemTypeSelector) {
-                itemTypeSelector.addEventListener('change', toggleSpecificFields);
-            }
-        });
-    </script>
+    {{ encore_entry_script_tags('media_item_form') }}
 {% endblock %}
