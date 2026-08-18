@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Entity\MediaItem;
 use App\Factory\MediaItemFactory;
-use App\Dto\MediaItemDto; // Assuming MediaItemDto exists
+use App\Dto\MediaItemDto;
 use Doctrine\ORM\EntityManagerInterface;
 
 class MediaItemService
