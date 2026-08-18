@@ -10,7 +10,7 @@ Pojďme se podívat na jednotlivé aspekty mého řešení:
 
 Moje aplikace je navržena s využitím **MVC (Model-View-Controller) architektury**, která je přirozeně implementována v rámci zvoleného **Symfony frameworku**.
 
-*   **Model:** Pro práci s daty jsem využil/a **Doctrine ORM**, které mi umožnilo definovat entity jako `MediaItem` (základ pro všechny nosiče), `Book`, `CD`, `DVD` (pro specifické atributy) a `Loan` (pro zápůjčky). Tyto entity a jejich repozitáře zajišťují veškerou interakci s databází.
+*   **Model:** Pro práci s daty jsem využil/a **Doctrine ORM**, které mi umožnilo definovat entity jako `MediaItem` (základ pro všechny nosiče), `Book`, `CD`, `DVD` (pro specifické atributy). Tyto entity a jejich repozitáře zajišťují veškerou interakci s databází.
 *   **View:** Uživatelské rozhraní je generováno pomocí šablonovacího enginu **Twig**. Pro zajištění moderního a responzivního vzhledu jsem použil/a **Bootstrap CSS framework**.
 *   **Controller:** Kontrolery zpracovávají HTTP požadavky od uživatele, komunikují s modely pro získání nebo uložení dat a následně předávají data do Twig šablon k vykreslení.
 
@@ -37,7 +37,7 @@ Při vývoji jsem se držel/a následujících postupů:
 Realizace projektu probíhala v několika klíčových fázích:
 
 1.  **Inicializace projektu:** Začal/a jsem založením nového Symfony projektu a konfigurací **Docker Compose** pro spuštění PHP aplikace a **MySQL** databáze.
-2.  **Návrh databáze:** Následoval návrh databázového schématu. Definoval/a jsem Doctrine entity (`MediaItem`, `Book`, `CD`, `DVD`, `Loan`) a jejich vzájemné vztahy. Poté jsem vygeneroval/a a aplikoval/a migrace pro vytvoření databázového schématu v **MySQL**.
+2.  **Návrh databáze:** Následoval návrh databázového schématu. Definoval/a jsem Doctrine entity (`MediaItem`, `Book`, `CD`, `DVD`) a jejich vzájemné vztahy. Poté jsem vygeneroval/a a aplikoval/a migrace pro vytvoření databázového schématu v **MySQL**.
 3.  **Implementace základního CRUD:** V této fázi jsem vytvořil/a kontrolery, formuláře a Twig šablony, které umožňují základní operace (vytvoření, čtení, úpravu a mazání) pro mediální položky. **Při tvorbě těchto částí jsem aktivně využíval/a AI pro generování počátečních struktur a refaktoring.**
 4.  **Rozšíření o specifické typy:** Dále jsem implementoval/a logiku pro rozlišení knih, CD a DVD, včetně přidání specifických polí pro každý typ a možnosti filtrování.
 5.  **Implementace správy zápůjček:** Klíčovým krokem bylo přidání funkcionality pro evidenci jména půjčujícího a vytvoření přehledu všech aktuálně zapůjčených položek.
@@ -85,7 +85,7 @@ Pro ukládání dat jsem zvolil/a **relační databázi MySQL**, jejíž konfigu
 
 *   Mám základní tabulku `MediaItem`, která obsahuje společné atributy pro všechny typy nosičů (např. název, popis, datum pořízení, typ nosiče).
 *   Specifické atributy pro knihy, CD a DVD jsou řešeny (zde upřesněte: např. "pomocí Single Table Inheritance v Doctrine, kde všechny typy sdílí jednu tabulku a jsou rozlišeny sloupcem 'discr'" nebo "pomocí Mapped Superclass, kde každá entita má svou tabulku, ale sdílí společné mapování").
-*   Tabulka `Loan` obsahuje informace o zápůjčce (jméno půjčujícího, datum zápůjčky) a odkazuje na `MediaItem`, který byl zapůjčen.
+*   Pole `borrowedTo` je přímo součástí entity `MediaItem` a slouží k evidenci aktuální zápůjčky. **Pro budoucí rozšíření o historii zápůjček by bylo vhodnější vytvořit samostatnou entitu (tabulku) `Loan`.**
 
 **Přístup k datům:** Veškerá interakce s databází probíhá prostřednictvím **Doctrine ORM**, což mi umožňuje pracovat s daty jako s PHP objekty a abstrahuje složité SQL dotazy.
 
@@ -95,8 +95,9 @@ Pro ukládání dat jsem zvolil/a **relační databázi MySQL**, jejíž konfigu
 
 V rámci projektu jsem se zaměřil/a i na dokumentaci:
 
+*   **Komplexní dokumentace:** Byla vypracována podrobná dokumentace aplikace v souboru `DOCUMENTATION.md`, která pokrývá všechny aspekty projektu od funkcionalit po technické detaily a budoucí rozšíření.
 *   **Dokumentace v kódu:** Kód je opatřen komentáři (PHPDoc) pro vysvětlení složitějších částí, účelu tříd, metod a parametrů. Používám srozumitelné názvy proměnných a funkcí pro zvýšení čitelnosti a udržovatelnosti kódu.
-*   **README.md:** V kořenovém adresáři projektu se nachází soubor `README.md`, který poskytuje základní informace o aplikaci, návod na spuštění (včetně Dockeru), popis hlavních funkcionalit a případné požadavky.
+*   **README.md:** V kořenovém adresáři projektu se nachází soubor `README.md` (a jeho anglická verze `README_EN.md`), který poskytuje základní informace o aplikaci, návod na spuštění (včetně Dockeru), popis hlavních funkcionalit a případné požadavky.
 *   **Doctrine Migrations:** Samotné migrace slouží jako cenná dokumentace změn databázového schématu v průběhu vývoje projektu.
 *   **Konfigurace:** Konfigurační soubory (např. `config/packages/*.yaml`, `.env`) jsou dobře strukturované a opatřené komentáři, což usnadňuje pochopení nastavení aplikace.
 
@@ -109,7 +110,7 @@ Jsem přesvědčen/a, že výsledná aplikace představuje robustní a funkční
 *   **Splnění požadavků:** Aplikace plně implementuje všechny požadované funkcionality, včetně komplexních CRUD operací a správy zápůjček.
 *   **Stabilita a spolehlivost:** Díky použití osvědčeného frameworku Symfony a Doctrine ORM je aplikace stabilní a spolehlivá v práci s daty.
 *   **Udržovatelnost:** Kód je strukturovaný, modulární a dodržuje standardy Symfony, což usnadňuje budoucí údržbu a případné rozšiřování o nové funkcionality.
-*   **Uživatelská zkušenost:** Díky použití **Bootstrapu** a **čistého JavaScriptu** je uživatelské rozhraní moderní, responzivní a intuitivní, což zajišťuje příjemnou a efektivní práci s evidencí.
+*   **Uživatelsky přívětivé rozhraní:** Díky použití **Bootstrapu** a **čistého JavaScriptu** je rozhraní přehledné, responzivní a intuitivní, což zajišťuje příjemnou a efektivní práci s evidencí.
 *   **Připravenost k nasazení:** Kontejnerizace pomocí Dockeru výrazně zjednodušuje proces nasazení aplikace na server.
 
 ---
