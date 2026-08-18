@@ -6,7 +6,17 @@ Tento projekt obsahuje Symfony aplikaci připravenou pro spuštění v Dockeru s
 
 - Docker
 - Docker Compose (plugin pro `docker compose`)
-- Node.js a npm (pro správu frontendových závislostí uvnitř Docker kontejneru)
+- Node.js a npm (jsou vyžadovány uvnitř PHP kontejneru pro správu frontendových závislostí a sestavení assetů)
+
+## Předpoklady pro hostitelský systém
+
+Pro bezproblémový vývoj a spouštění projektu na vašem hostitelském systému (např. Ubuntu ve WSL) se doporučují následující verze nástrojů:
+
+-   **Operační systém:** Ubuntu 22.04 LTS nebo novější (nebo jiný kompatibilní Linux/macOS/Windows s WSL2).
+-   **Docker:** Verze 24.x.x nebo novější.
+-   **Docker Compose:** Verze v2.x.x nebo novější.
+-   **Node.js:** Verze 20.10.0 nebo novější (doporučena nejnovější LTS verze). *Tato verze je klíčová pro správné fungování `npm` příkazů, pokud byste je omylem spustili na hostu, nebo pro jiné projekty.*
+-   **npm:** Verze 10.x.x nebo novější.
 
 ## Spuštění projektu
 
@@ -28,19 +38,22 @@ docker compose exec php composer install
 
 ### 3. Instalace frontendových závislostí (Node.js)
 
-Po instalaci Composer závislostí je potřeba nainstalovat i frontendové závislosti (např. Bootstrap) pomocí npm.
+Po instalaci Composer závislostí je potřeba nainstalovat i frontendové závislosti (např. Bootstrap) pomocí npm. **Tento příkaz se spouští uvnitř PHP kontejneru.**
 ```bash
 docker compose exec php npm install
 ```
 
 ### 4. Sestavení frontendových assetů (Webpack Encore)
 
-Pro sestavení CSS a JavaScript souborů (včetně Bootstrapu) použijte Webpack Encore.
+Pro sestavení CSS a JavaScript souborů (včetně Bootstrapu) použijte Webpack Encore. **Tyto příkazy se spouští uvnitř PHP kontejneru.**
+
 ```bash
-# Pro vývoj (s watch režimem, který automaticky přebudovává při změnách souborů)
+# Pro vývoj (s watch režimem, který automaticky přebudovává při změnách souborů).
+# Spusťte tento příkaz jednou na začátku vaší vývojové relace v samostatném terminálu a nechte ho běžet.
 docker compose exec php npm run dev
 
-# Pro produkci (optimalizované a minifikované soubory)
+# Pro produkci (optimalizované a minifikované soubory).
+# Spusťte tento příkaz jednou při přípravě na nasazení.
 # docker compose exec php npm run build
 ```
 
@@ -58,9 +71,10 @@ Pro jistotu vyčistěte cache Symfony.
 docker compose exec php php bin/console cache:clear
 ```
 
-### 7. Spuštění Symfony webového serveru
+### 7. Spuštění Symfony webového serveru (pouze pro vývoj)
 
 Spusťte vestavěný webový server Symfony uvnitř PHP kontejneru. Parametr `--allow-all-ip` je klíčový, aby byl server dostupný zvenčí kontejneru.
+**Upozornění:** Tento vestavěný server je určen **pouze pro vývojové účely** a není vhodný pro produkční prostředí. Pro produkci byste měli použít robustní webový server jako Nginx nebo Apache s PHP-FPM.
 ```bash
 docker compose exec php symfony server:start --allow-all-ip
 ```
