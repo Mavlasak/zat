@@ -1,6 +1,6 @@
 # Symfony Docker Project
 
-This project contains a Symfony application prepared for Docker deployment with PHP 8.3, MySQL, and PostgreSQL. The frontend is managed using Webpack Encore and Bootstrap.
+This project contains a Symfony application prepared for Docker deployment with PHP 8.3 and MySQL. The frontend is managed using Webpack Encore and Bootstrap.
 
 ## Requirements
 

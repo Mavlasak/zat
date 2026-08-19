@@ -1,6 +1,6 @@
 # Symfony Docker Projekt
 
-Tento projekt obsahuje Symfony aplikaci připravenou pro nasazení v Dockeru s PHP 8.3, MySQL a PostgreSQL. Frontend je spravován pomocí Webpack Encore a Bootstrapu.
+Tento projekt obsahuje Symfony aplikaci připravenou pro nasazení v Dockeru s PHP 8.3 a MySQL. Frontend je spravován pomocí Webpack Encore a Bootstrapu.
 
 ## Požadavky
 
