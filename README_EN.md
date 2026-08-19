@@ -24,7 +24,23 @@ After cloning the repository, follow these steps:
 
 ### 1. Build and Start Containers
 
-This command builds Docker images (if it's the first time) and starts the containers in the background.
+This command builds Docker images (if it's the first time or if `Dockerfile` files have changed) and starts the containers in the background.
+
+**Important:** If you have made changes to the `Dockerfile` (e.g., added `nodejs` and `npm`), it is necessary to rebuild the image. To ensure a clean build and start of the new container, we recommend the following procedure:
+
+```bash
+# 1. Stop and remove the existing PHP container (if running)
+docker compose stop php
+docker compose rm -f php
+
+# 2. Rebuild the PHP service image with a forced build (without cache)
+docker compose build --no-cache php
+
+# 3. Start all services
+docker compose up -d
+```
+
+If you have not made changes to the `Dockerfile` and are just starting the project for the first time, or after stopping, simply:
 ```bash
 docker compose up -d --build
 ```

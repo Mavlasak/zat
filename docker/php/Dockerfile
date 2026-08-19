@@ -4,7 +4,9 @@ FROM php:8.3-fpm-alpine
 RUN apk add --no-cache \
     bash \
     icu-dev \
-    mysql-client
+    mysql-client \
+    nodejs \
+    npm
 
 # Install PHP extensions
 RUN docker-php-ext-install \
