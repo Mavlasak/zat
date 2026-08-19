@@ -75,6 +75,11 @@ docker compose exec php npm run dev
 
 ### 5. Spuštění Doctrine migrací
 
+Před spuštěním migrací je nutné vytvořit databázi:
+```bash
+docker compose exec php php bin/console doctrine:database:create
+```
+
 Pokud je databáze prázdná nebo potřebuje aktualizace schématu, spusťte migrace.
 ```bash
 docker compose exec php php bin/console doctrine:migrations:migrate

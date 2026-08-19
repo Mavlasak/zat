@@ -74,7 +74,10 @@ docker compose exec php npm run dev
 ```
 
 ### 5. Run Doctrine Migrations
-
+Before running migrations, it is necessary to create the database:
+```bash
+docker compose exec php php bin/console doctrine:database:create
+```
 If the database is empty or needs schema updates, run the migrations.
 ```bash
 docker compose exec php php bin/console doctrine:migrations:migrate
