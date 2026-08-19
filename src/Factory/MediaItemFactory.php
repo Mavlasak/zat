@@ -18,24 +18,11 @@ class MediaItemFactory
             default => throw new \InvalidArgumentException('Invalid type'),
         };
 
-        $this->updateEntityFromDto($item, $dto);
-
-        return $item;
-    }
-
-    public function updateEntityFromDto(MediaItem $item, MediaItemDTO $dto): void
-    {
         $item->setTitle($dto->title);
         $item->setDescription($dto->description);
         $item->setAcquisitionDate($dto->acquisitionDate);
         $item->setBorrowedTo($dto->borrowedTo);
 
-        if ($item instanceof Book) {
-            $item->setAuthor($dto->author);
-        } elseif ($item instanceof Cd) {
-            $item->setArtist($dto->artist);
-        } elseif ($item instanceof Dvd) {
-            $item->setDirector($dto->director);
-        }
+        return $item;
     }
 }
